@@ -3,23 +3,43 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create admin user
+        User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+            'email_verified_at' => now(),
         ]);
+
+        // Create teacher user
+        User::create([
+            'name' => 'Teacher User',
+            'email' => 'teacher@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'teacher',
+            'email_verified_at' => now(),
+        ]);
+
+        // Create student users
+        for ($i = 1; $i <= 5; $i++) {
+            User::create([
+                'name' => 'Student ' . $i,
+                'email' => 'student' . $i . '@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'student',
+                'email_verified_at' => now(),
+            ]);
+        }
+
+        // Run IELTS test seeder
+        $this->call(IeltsTestSeeder::class);
     }
 }
